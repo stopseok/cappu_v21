@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>식당 관리 시스템</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    html, body { width: 100%; min-height: 100%; overflow-x: hidden; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: #e5e7eb; }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      margin: 0 auto;
+      box-shadow: 0 0 30px rgba(0,0,0,0.15);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .header h1 { font-size: 22px; margin-bottom: 5px; }
+    .header p { opacity: 0.9; font-size: 13px; }
+
+    .content { padding: 16px; width: 100%; }
+
+    .form-group { margin-bottom: 14px; width: 100%; }
+
+    label { display: block; margin-bottom: 6px; color: #333; font-weight: 600; font-size: 14px; }
+    label .optional { font-weight: normal; color: #9ca3af; font-size: 12px; margin-left: 4px; }
+
+    input[type="text"], input[type="password"], input[type="email"],
+    input[type="number"], input[type="date"], select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 50px;
+      background-color: white;
+    }
+    input:focus, select:focus { outline: none; border-color: #667eea; }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 35px;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: block;
+      text-align: center;
+      width: 100%;
+      touch-action: manipulation;
+      min-height: 50px;
+      -webkit-appearance: none;
+    }
+    .btn:active { transform: scale(0.97); opacity: 0.85; }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-secondary { background: #f5f5f5; color: #333; }
+    .btn-success { background: #10b981; color: white; }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-warning { background: #f59e0b; color: white; }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 13px;
+      width: auto;
+      display: inline-block;
+      min-height: 38px;
+    }
+
+    .checkbox-group { display: flex; align-items: center; margin: 16px 0; }
+    .checkbox-group input { margin-right: 10px; width: 22px; height: 22px; cursor: pointer; flex-shrink: 0; }
+    .checkbox-group label { margin-bottom: 0; font-weight: normal; font-size: 15px; cursor: pointer; }
+
+    .link { color: #667eea; text-decoration: none; font-size: 16px; cursor: pointer; padding: 10px; display: inline-block; }
+    .link:hover { text-decoration: underline; }
+
+    .text-center { text-align: center; }
+    .mt-20 { margin-top: 20px; }
+    .hidden { display: none !important; }
+
+    .alert {
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+    .alert-error   { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+    .alert-info    { background: #dbeafe; color: #1e40af; border: 1px solid #3b82f6; }
+
+    .user-info {
+      background: #f9fafb;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .user-info-text { font-size: 15px; color: #374151; flex: 1; min-width: 0; word-break: break-all; }
+    .user-info-text strong { color: #111827; }
+
+    .btn-logout { padding: 10px 16px; font-size: 14px; width: auto; display: inline-block; min-height: 44px; white-space: nowrap; }
+
+    .card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+    .card h3 { margin-bottom: 12px; color: #111827; font-size: 17px; }
+
+    .table-wrap { width: 100%; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th, td {
+      padding: 8px 6px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 12px;
+      word-break: break-all;
+      white-space: normal;
+      vertical-align: top;
+    }
+    th { background: #f9fafb; font-weight: 600; color: #374151; white-space: nowrap; }
+    tr:hover { background: #f9fafb; }
+
+    .col-name  { width: 13%; }
+    .col-dept  { width: 15%; }
+    .col-menu  { width: 28%; }
+    .col-price { width: 18%; }
+    .col-date  { width: 26%; }
+
+    .col-rname { width: 75%; }
+    .col-act   { width: 25%; }
+
+    .col-mname  { width: 40%; }
+    .col-mprice { width: 22%; }
+    .col-mact   { width: 38%; }
+
+    .col-uid   { width: 17%; }
+    .col-uname { width: 13%; }
+    .col-udept { width: 17%; }
+    .col-urole { width: 13%; }
+    .col-urst  { width: 20%; }
+    .col-udel  { width: 20%; }
+
+    .col-dname { width: 75%; }
+    .col-ddel  { width: 25%; }
+
+    .total-amount {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 14px;
+      text-align: center;
+    }
+    .total-amount h2 { font-size: 22px; margin-bottom: 5px; }
+    .total-amount p { opacity: 0.9; font-size: 14px; }
+
+    .btn-group { display: flex; flex-direction: column; gap: 8px; }
+    .btn-group .btn { width: 100%; }
+
+    .inline-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; width: 100%; }
+    .inline-form .form-group { flex: 1; margin-bottom: 0; width: 100%; }
+    .inline-form .btn { width: 100%; }
+
+    .loading { text-align: center; padding: 30px 20px; color: #6b7280; }
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .period-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; width: 100%; }
+    .period-selector .form-group { flex: 1; margin-bottom: 0; width: 100%; }
+    .period-selector .btn { width: 100%; }
+
+    .empty-state { text-align: center; padding: 30px 16px; color: #6b7280; }
+    .empty-state-icon { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
+    .empty-state p { font-size: 14px; line-height: 1.5; }
+
+    .restaurant-buttons { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .restaurant-buttons .btn { width: 100%; font-size: 15px; }
+    .restaurant-buttons .btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+    }
+    .restaurant-buttons .btn-all { background: #059669; color: white; }
+    .restaurant-buttons .btn-all.active {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+    }
+
+    .admin-restaurant-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; border-radius: 10px; padding: 14px 16px;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .admin-restaurant-banner .banner-icon { font-size: 28px; }
+    .admin-restaurant-banner .banner-text { flex: 1; }
+    .admin-restaurant-banner .banner-label { font-size: 12px; opacity: 0.85; margin-bottom: 2px; }
+    .admin-restaurant-banner .banner-name { font-size: 18px; font-weight: 700; }
+
+    .menu-edit-row { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 10px; margin-top: 6px; }
+    .menu-edit-row input { font-size: 15px; padding: 9px 12px; min-height: 42px; }
+    .menu-edit-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .menu-edit-actions .btn { min-height: 38px; font-size: 13px; }
+
+    .master-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 16px; color: white; }
+    .master-header-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .master-title { font-size: 12px; opacity: 0.8; margin-bottom: 2px; }
+    .master-name { font-size: 16px; color: white; }
+    .master-header .btn-logout {
+      background: rgba(255,255,255,0.2); color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      width: auto; padding: 8px 16px; font-size: 14px; min-height: 40px;
+    }
+
+    .master-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; }
+    .master-menu-btn {
+      background: white; border: 2px solid #e5e7eb; border-radius: 14px;
+      padding: 24px 12px; text-align: center; cursor: pointer; transition: all 0.2s;
+      -webkit-appearance: none; touch-action: manipulation; width: 100%;
+    }
+    .master-menu-btn:active { transform: scale(0.96); border-color: #667eea; background: #f5f3ff; }
+    .master-menu-icon { font-size: 36px; margin-bottom: 10px; line-height: 1; }
+    .master-menu-label { font-size: 15px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
+    .master-menu-desc { font-size: 12px; color: #9ca3af; }
+
+    .master-page { width: 100%; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .back-btn {
+      background: none; border: none; color: #667eea;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      padding: 6px 4px; -webkit-appearance: none; touch-action: manipulation; white-space: nowrap;
+    }
+    .back-btn:active { opacity: 0.6; }
+    .page-title { font-size: 17px; font-weight: 700; color: #111827; margin: 0; }
+
+    .master-page .card { margin: 12px 12px 0; }
+    .master-page .card:last-child { margin-bottom: 12px; }
+
+    .member-role-badge { display: inline-block; padding: 2px 6px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-master { background: #fef3c7; color: #92400e; }
+    .badge-admin  { background: #dbeafe; color: #1e40af; }
+    .badge-user   { background: #f3f4f6; color: #374151; }
+
+    .price-display {
+      padding: 13px 14px; border: 2px solid #e1e8ed; border-radius: 8px;
+      font-size: 16px; min-height: 50px; background: #f9fafb; color: #9ca3af;
+      display: flex; align-items: center;
+    }
+    .price-display.has-value { color: #111827; font-weight: 700; border-color: #667eea; background: white; }
+
+    .summary-box {
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+    .summary-box h4 { font-size: 14px; color: #166534; margin-bottom: 8px; }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 4px 0; font-size: 13px; color: #374151;
+    }
+    .summary-row.total {
+      border-top: 1.5px solid #86efac; margin-top: 8px; padding-top: 10px;
+      font-weight: 700; font-size: 15px; color: #065f46;
+    }
+    .summary-count { font-size: 11px; color: #6b7280; margin-left: 4px; }
+
+    .pw-strength { margin-top: 6px; font-size: 12px; }
+    .pw-strength-bar { height: 4px; border-radius: 2px; background: #e5e7eb; margin-bottom: 4px; }
+    .pw-strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+    .pw-weak   { color: #ef4444; }
+    .pw-medium { color: #f59e0b; }
+    .pw-strong { color: #10b981; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🍽️ 식당 관리 시스템</h1>
+    <p>Kolon Restaurant Management System</p>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== 로그인 ===== -->
+    <div id="loginScreen">
+      <div id="loginAlert"></div>
+      <div class="form-group">
+        <label for="loginUserId">아이디</label>
+        <input type="text" id="loginUserId" placeholder="아이디를 입력하세요" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">비밀번호</label>
+        <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') handleLogin();">
+      </div>
+      <button class="btn btn-primary" onclick="handleLogin()">로그인</button>
+      <div class="checkbox-group">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">아이디/비밀번호 기억</label>
+      </div>
+      <div class="text-center mt-20">
+        <a class="link" onclick="showRegisterScreen()">회원가입</a>
+      </div>
+    </div>
+
+    <!-- ===== 회원가입 ===== -->
+    <div id="registerScreen" class="hidden">
+      <div id="registerAlert"></div>
+      <div class="inline-form">
+        <div class="form-group" style="flex:2;">
+          <label for="registerUserId">아이디</label>
+          <input type="text" id="registerUserId" placeholder="아이디를 입력하세요" autocomplete="off">
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="checkDuplicateUserId()">중복확인</button>
+      </div>
+      <div class="form-group">
+        <label for="registerPassword">비밀번호</label>
+        <input type="password" id="registerPassword" placeholder="비밀번호를 입력하세요" autocomplete="new-password"
+               oninput="checkPasswordStrength(this.value)">
+        <div class="pw-strength" id="pwStrengthWrap" style="display:none;">
+          <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwStrengthFill"></div></div>
+          <span id="pwStrengthText"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="registerName">이름</label>
+        <input type="text" id="registerName" placeholder="이름을 입력하세요" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="registerDepartment">부서</label>
+        <select id="registerDepartment"><option value="">로딩 중...</option></select>
+      </div>
+      <div class="form-group">
+        <label for="registerEmail">메일주소 <span class="optional">(선택)</span></label>
+        <input type="email" id="registerEmail" placeholder="example@kolon.com (입력하지 않아도 됩니다)" autocomplete="email">
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="handleRegister()">가입하기</button>
+        <button class="btn btn-secondary" onclick="showLoginScreen()">취소</button>
+      </div>
+    </div>
+
+    <!-- ===== 일반 사용자 ===== -->
+    <div id="userScreen" class="hidden">
+      <div class="user-info">
+        <div class="user-info-text">
+          <strong id="userNameDisplay"></strong>님 (<span id="userDeptDisplay"></span>)
+        </div>
+        <button class="btn btn-secondary btn-logout" onclick="handleLogout()">로그아웃</button>
+      </div>
+      <div id="userAlert"></div>
+      <div class="card">
+        <h3>주문하기</h3>
+        <div class="form-group">
+          <label for="userRestaurantSelect">식당 선택</label>
+          <select id="userRestaurantSelect" onchange="loadMenusForUser()">
+            <option value="">식당을 선택하세요</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="userMenuSelect">메뉴 선택</label>
+          <select id="userMenuSelect" onchange="onMenuSelected()">
+            <option value="">메뉴를 선택하세요</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>금액</label>
+          <div id="userPriceDisplay" class="price-display">메뉴를 선택하면 금액이 표시됩니다</div>
+          <input type="hidden" id="userPrice" value="0">
+        </div>
+        <button class="btn btn-primary" onclick="handleUserOrder()">주문 등록</button>
+      </div>
+
+      <div class="card">
+        <h3>🔐 비밀번호 변경</h3>
+        <div id="userChangePwAlert"></div>
+        <div class="form-group">
+          <label for="userCurrentPw">현재 비밀번호</label>
+          <input type="password" id="userCurrentPw" placeholder="현재 비밀번호">
+        </div>
+        <div class="form-group">
+          <label for="userNewPw">새 비밀번호</label>
+          <input type="password" id="userNewPw" placeholder="새 비밀번호" oninput="checkPasswordStrength2(this.value)">
+          <div class="pw-strength" id="pwStrengthWrap2" style="display:none;">
+            <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwStrengthFill2"></div></div>
+            <span id="pwStrengthText2"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="userNewPwConfirm">새 비밀번호 확인</label>
+          <input type="password" id="userNewPwConfirm" placeholder="새 비밀번호를 다시 입력하세요">
+        </div>
+        <button class="btn btn-warning" onclick="handleChangePassword()">비밀번호 변경</button>
+      </div>
+    </div>
+
+    <!-- ===== 식당 관리자 ===== -->
+    <div id="adminScreen" class="hidden">
+      <div class="user-info">
+        <div class="user-info-text">
+          <strong id="adminNameDisplay"></strong>님 (<span id="adminDeptDisplay"></span>) - 식당 관리자
+        </div>
+        <button class="btn btn-secondary btn-logout" onclick="handleLogout()">로그아웃</button>
+      </div>
+      <div id="adminAlert"></div>
+
+      <div id="adminRestaurantBanner" class="admin-restaurant-banner hidden">
+        <div class="banner-icon">🏪</div>
+        <div class="banner-text">
+          <div class="banner-label">담당 식당</div>
+          <div class="banner-name" id="adminRestaurantName">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="margin-bottom:0;">📅 당일 주문 현황</h3>
+          <button class="btn btn-success btn-small" onclick="refreshNow()">🔄 새로고침</button>
+        </div>
+        <div id="todayOrdersContent">
+          <div class="empty-state"><div class="empty-state-icon">🍽️</div><p>로딩 중입니다...</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 기간별 주문 조회</h3>
+        <div class="period-selector">
+          <div class="form-group">
+            <label for="adminStartDate">시작일</label>
+            <input type="date" id="adminStartDate">
+          </div>
+          <div class="form-group">
+            <label for="adminEndDate">종료일</label>
+            <input type="date" id="adminEndDate">
+          </div>
+          <button class="btn btn-primary" onclick="loadPeriodOrders()">조회</button>
+        </div>
+        <div id="periodOrdersContent">
+          <div class="empty-state"><div class="empty-state-icon">📆</div><p>기간을 선택하고 조회 버튼을 눌러주세요</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 마스터 관리자 ===== -->
+    <div id="masterScreen" class="hidden">
+      <div class="master-header">
+        <div class="master-header-top">
+          <div>
+            <div class="master-title">마스터 관리자</div>
+            <div class="master-name"><strong id="masterNameDisplay"></strong>님</div>
+          </div>
+          <button class="btn btn-secondary btn-logout" onclick="handleLogout()">로그아웃</button>
+        </div>
+      </div>
+
+      <div id="masterHome">
+        <div id="masterAlert"></div>
+        <div class="master-menu-grid">
+          <button class="master-menu-btn" onclick="showMasterPage('restaurant')">
+            <div class="master-menu-icon">🏪</div>
+            <div class="master-menu-label">식당 관리</div>
+            <div class="master-menu-desc">식당 추가 · 삭제</div>
+          </button>
+          <button class="master-menu-btn" onclick="showMasterPage('menu')">
+            <div class="master-menu-icon">📋</div>
+            <div class="master-menu-label">메뉴 관리</div>
+            <div class="master-menu-desc">메뉴 추가 · 수정 · 삭제</div>
+          </button>
+          <button class="master-menu-btn" onclick="showMasterPage('stats')">
+            <div class="master-menu-icon">📈</div>
+            <div class="master-menu-label">식당별 통계</div>
+            <div class="master-menu-desc">기간별 주문 통계</div>
+          </button>
+          <button class="master-menu-btn" onclick="showMasterPage('members')">
+            <div class="master-menu-icon">👥</div>
+            <div class="master-menu-label">회원 목록</div>
+            <div class="master-menu-desc">회원 추가 · 삭제</div>
+          </button>
+          <button class="master-menu-btn" onclick="showMasterPage('departments')">
+            <div class="master-menu-icon">🏢</div>
+            <div class="master-menu-label">부서 관리</div>
+            <div class="master-menu-desc">부서 추가 · 삭제</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 식당 관리 -->
+      <div id="masterPageRestaurant" class="master-page hidden">
+        <div class="page-header">
+          <button class="back-btn" onclick="showMasterHome()">← 뒤로</button>
+          <h2 class="page-title">🏪 식당 관리</h2>
+        </div>
+        <div id="restaurantAlert"></div>
+        <div class="card">
+          <div class="inline-form">
+            <div class="form-group">
+              <label for="newRestaurantName">식당 이름</label>
+              <input type="text" id="newRestaurantName" placeholder="식당 이름을 입력하세요">
+            </div>
+            <button class="btn btn-success btn-small" onclick="handleAddRestaurant()">추가</button>
+          </div>
+        </div>
+        <div class="card">
+          <div id="restaurantsContent"><div class="loading"><div class="spinner"></div><p>로딩 중...</p></div></div>
+        </div>
+      </div>
+
+      <!-- 메뉴 관리 -->
+      <div id="masterPageMenu" class="master-page hidden">
+        <div class="page-header">
+          <button class="back-btn" onclick="showMasterHome()">← 뒤로</button>
+          <h2 class="page-title">📋 메뉴 관리</h2>
+        </div>
+        <div id="menuAlert"></div>
+        <div class="card">
+          <div class="form-group">
+            <label for="menuRestaurantSelect">식당 선택</label>
+            <select id="menuRestaurantSelect" onchange="loadMenusForMaster()">
+              <option value="">식당을 선택하세요</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newMenuName">메뉴 이름</label>
+            <input type="text" id="newMenuName" placeholder="메뉴 이름을 입력하세요">
+          </div>
+          <div class="form-group">
+            <label for="newMenuPrice">메뉴 금액 (원)</label>
+            <input type="number" id="newMenuPrice" placeholder="금액을 입력하세요" min="0" inputmode="numeric">
+          </div>
+          <button class="btn btn-success" onclick="handleAddMenu()">메뉴 추가</button>
+        </div>
+        <div class="card">
+          <div id="menusContent">
+            <div class="empty-state"><div class="empty-state-icon">🍔</div><p>식당을 선택하면 메뉴 목록이 표시됩니다</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 식당별 통계 -->
+      <div id="masterPageStats" class="master-page hidden">
+        <div class="page-header">
+          <button class="back-btn" onclick="showMasterHome()">← 뒤로</button>
+          <h2 class="page-title">📈 식당별 통계</h2>
+        </div>
+        <div id="statsAlert"></div>
+        <div class="card">
+          <div class="period-selector">
+            <div class="form-group">
+              <label for="masterStartDate">시작일</label>
+              <input type="date" id="masterStartDate">
+            </div>
+            <div class="form-group">
+              <label for="masterEndDate">종료일</label>
+              <input type="date" id="masterEndDate">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="statsDeptFilter">부서 필터 <span style="font-weight:normal;color:#9ca3af;">(선택사항)</span></label>
+            <select id="statsDeptFilter">
+              <option value="">전체 부서</option>
+            </select>
+          </div>
+          <div id="restaurantButtonsContainer" style="margin-bottom:12px;">
+            <div class="loading"><div class="spinner"></div><p>로딩 중...</p></div>
+          </div>
+          <button class="btn btn-primary" onclick="loadRestaurantStats()">조회</button>
+        </div>
+        <div id="statsContent">
+          <div class="empty-state"><div class="empty-state-icon">📊</div><p>식당을 선택하고 조회 버튼을 눌러주세요</p></div>
+        </div>
+      </div>
+
+      <!-- 회원 목록 -->
+      <div id="masterPageMembers" class="master-page hidden">
+        <div class="page-header">
+          <button class="back-btn" onclick="showMasterHome()">← 뒤로</button>
+          <h2 class="page-title">👥 회원 목록</h2>
+        </div>
+        <div id="membersAlert"></div>
+        <div class="card">
+          <h3 style="margin-bottom:14px;">회원 추가</h3>
+          <div class="form-group">
+            <label for="newMemberUserId">아이디</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="text" id="newMemberUserId" placeholder="아이디" style="flex:1;">
+              <button class="btn btn-secondary btn-small" onclick="checkMemberUserId()">중복확인</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newMemberPassword">비밀번호</label>
+            <input type="password" id="newMemberPassword" placeholder="비밀번호">
+          </div>
+          <div class="form-group">
+            <label for="newMemberName">이름</label>
+            <input type="text" id="newMemberName" placeholder="이름">
+          </div>
+          <div class="form-group">
+            <label for="newMemberDept">부서</label>
+            <select id="newMemberDept"><option value="">로딩 중...</option></select>
+          </div>
+          <div class="form-group">
+            <label for="newMemberEmail">이메일 <span class="optional">(선택)</span></label>
+            <input type="email" id="newMemberEmail" placeholder="example@kolon.com">
+          </div>
+          <div class="form-group">
+            <label for="newMemberRole">역할</label>
+            <select id="newMemberRole" onchange="toggleRestaurantSelect()">
+              <option value="user">일반 사용자</option>
+              <option value="admin">식당 관리자</option>
+              <option value="master">마스터 관리자</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="memberRestaurantGroup">
+            <label for="newMemberRestaurant">배정 식당</label>
+            <select id="newMemberRestaurant"><option value="">식당을 선택하세요</option></select>
+          </div>
+          <button class="btn btn-primary" onclick="handleAddMember()">회원 추가</button>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:14px;">회원 목록</h3>
+          <div id="membersContent"><div class="loading"><div class="spinner"></div><p>로딩 중...</p></div></div>
+        </div>
+      </div>
+
+      <!-- 부서 관리 -->
+      <div id="masterPageDepartments" class="master-page hidden">
+        <div class="page-header">
+          <button class="back-btn" onclick="showMasterHome()">← 뒤로</button>
+          <h2 class="page-title">🏢 부서 관리</h2>
+        </div>
+        <div id="deptAlert"></div>
+        <div class="card">
+          <div class="inline-form">
+            <div class="form-group">
+              <label for="newDeptName">부서 이름</label>
+              <input type="text" id="newDeptName" placeholder="부서 이름을 입력하세요">
+            </div>
+            <button class="btn btn-success btn-small" onclick="handleAddDepartment()">추가</button>
+          </div>
+        </div>
+        <div class="card">
+          <div id="deptsContent"><div class="loading"><div class="spinner"></div><p>로딩 중...</p></div></div>
+        </div>
+      </div>
+
+    </div><!-- /masterScreen -->
+  </div><!-- /content -->
+</div><!-- /container -->
+
+<script>
+// ============================================
+// ★★★ GAS 웹앱 URL 설정 (여기만 바꾸면 됩니다) ★★★
+// ============================================
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyI3_73hfdWJHArYzlj3xdVJmv4URlkpOxTXaCwwS7pLNXUT3yBrHv_uiHskF6Z_hnM_Q/exec';
+
+// ============================================
+// GAS API 호출 헬퍼 (GET 방식)
+// ============================================
+function gasCall(params) {
+  var url = GAS_URL + '?' + Object.keys(params).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] !== undefined ? params[k] : '');
+  }).join('&');
+  return fetch(url).then(function(r) { return r.json(); });
+}
+
+// POST 방식 (데이터 변경 작업)
+function gasPost(params) {
+  return fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: Object.keys(params).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] !== undefined ? params[k] : '');
+    }).join('&')
+  }).then(function(r) { return r.json(); });
+}
+
+// ============================================
+// 전역 상태
+// ============================================
+var currentUser = null;
+var userIdChecked = false;
+var memberIdChecked = false;
+var selectedRestaurantId = 'all';
+var adminRestaurantId = null;
+
+// ============================================
+// 캐시
+// ============================================
+var Cache = {
+  restaurants: null,
+  menus: {},
+  members: null,
+  departments: null,
+  clear: function() { this.restaurants = null; this.menus = {}; this.members = null; this.departments = null; },
+  clearRestaurants: function() { this.restaurants = null; this.menus = {}; },
+  clearMenus: function(rId) { if (rId) delete this.menus[rId]; else this.menus = {}; },
+  clearMembers: function() { this.members = null; },
+  clearDepts: function() { this.departments = null; }
+};
+
+// ============================================
+// 비밀번호 강도 체크
+// ============================================
+function getPasswordStrength(pw) {
+  if (!pw) return 0;
+  var score = 0;
+  if (pw.length >= 6) score++;
+  if (pw.length >= 10) score++;
+  if (/[a-zA-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+  return score;
+}
+
+function renderStrength(score, fillId, textId, wrapId) {
+  var wrap = document.getElementById(wrapId);
+  var fill = document.getElementById(fillId);
+  var text = document.getElementById(textId);
+  if (!wrap || !fill || !text) return;
+  wrap.style.display = 'block';
+  var pct, color, label, cls;
+  if (score <= 1)      { pct='20%'; color='#ef4444'; label='매우 약함'; cls='pw-weak'; }
+  else if (score === 2){ pct='40%'; color='#f97316'; label='약함';     cls='pw-weak'; }
+  else if (score === 3){ pct='60%'; color='#f59e0b'; label='보통';     cls='pw-medium'; }
+  else if (score === 4){ pct='80%'; color='#84cc16'; label='강함';     cls='pw-strong'; }
+  else                 { pct='100%';color='#10b981'; label='매우 강함'; cls='pw-strong'; }
+  fill.style.width = pct;
+  fill.style.background = color;
+  text.textContent = label;
+  text.className = cls;
+}
+
+function checkPasswordStrength(pw) {
+  renderStrength(getPasswordStrength(pw), 'pwStrengthFill', 'pwStrengthText', 'pwStrengthWrap');
+}
+function checkPasswordStrength2(pw) {
+  renderStrength(getPasswordStrength(pw), 'pwStrengthFill2', 'pwStrengthText2', 'pwStrengthWrap2');
+}
+
+// ============================================
+// 초기화
+// ============================================
+window.onload = function() {
+  loadSavedCredentials();
+  setDefaultDates();
+};
+
+function loadSavedCredentials() {
+  try {
+    if (localStorage.getItem('rememberMe') === 'true') {
+      document.getElementById('loginUserId').value = localStorage.getItem('userId') || '';
+      document.getElementById('loginPassword').value = localStorage.getItem('password') || '';
+      document.getElementById('rememberMe').checked = true;
+    }
+  } catch(e) {}
+}
+
+function saveCredentials(userId, password, remember) {
+  try {
+    if (remember) {
+      localStorage.setItem('rememberMe', 'true');
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('password', password);
+    } else {
+      localStorage.removeItem('rememberMe');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('password');
+    }
+  } catch(e) {}
+}
+
+function setDefaultDates() {
+  var today = new Date().toISOString().split('T')[0];
+  ['adminStartDate','adminEndDate','masterStartDate','masterEndDate'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = today;
+  });
+}
+
+function preloadCache() {
+  if (!Cache.restaurants) {
+    gasCall({ action: 'getRestaurants' }).then(function(d) { Cache.restaurants = d; }).catch(function(){});
+  }
+}
+
+// ============================================
+// 화면 전환
+// ============================================
+function hideAllScreens() {
+  ['loginScreen','registerScreen','userScreen','adminScreen','masterScreen'].forEach(function(id) {
+    document.getElementById(id).classList.add('hidden');
+  });
+  window.scrollTo(0, 0);
+}
+
+function showLoginScreen() {
+  hideAllScreens();
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+function showRegisterScreen() {
+  hideAllScreens();
+  document.getElementById('registerScreen').classList.remove('hidden');
+  userIdChecked = false;
+  loadDeptSelect('registerDepartment');
+}
+
+function showUserScreen() {
+  hideAllScreens();
+  document.getElementById('userScreen').classList.remove('hidden');
+  document.getElementById('userNameDisplay').textContent = currentUser.name;
+  document.getElementById('userDeptDisplay').textContent = currentUser.department;
+  preloadCache();
+  loadRestaurantsForUser();
+}
+
+function showAdminScreen() {
+  hideAllScreens();
+  document.getElementById('adminScreen').classList.remove('hidden');
+  document.getElementById('adminNameDisplay').textContent = currentUser.name;
+  document.getElementById('adminDeptDisplay').textContent = currentUser.department;
+
+  adminRestaurantId = (currentUser.restaurantId || '').trim();
+
+  if (!adminRestaurantId) {
+    document.getElementById('adminRestaurantBanner').classList.remove('hidden');
+    document.getElementById('adminRestaurantName').textContent = '배정된 식당 없음';
+    document.getElementById('todayOrdersContent').innerHTML =
+      '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>마스터 관리자에게 식당 배정을 요청해주세요</p></div>';
+    setDefaultDates();
+    return;
+  }
+
+  document.getElementById('adminRestaurantBanner').classList.remove('hidden');
+  document.getElementById('adminRestaurantName').textContent = '로딩 중...';
+
+  gasCall({ action: 'getAdminRestaurant', userId: currentUser.userId })
+    .then(function(restaurant) {
+      document.getElementById('adminRestaurantName').textContent = restaurant ? restaurant.name : '식당 정보 없음';
+    })
+    .catch(function() {
+      document.getElementById('adminRestaurantName').textContent = adminRestaurantId;
+    });
+
+  setDefaultDates();
+  loadTodayOrders();
+}
+
+function showMasterScreen() {
+  hideAllScreens();
+  document.getElementById('masterScreen').classList.remove('hidden');
+  document.getElementById('masterNameDisplay').textContent = currentUser.name;
+  preloadCache();
+  showMasterHome();
+}
+
+function showMasterHome() {
+  document.getElementById('masterHome').classList.remove('hidden');
+  document.querySelectorAll('.master-page').forEach(function(p) { p.classList.add('hidden'); });
+  window.scrollTo(0, 0);
+}
+
+function showMasterPage(page) {
+  document.getElementById('masterHome').classList.add('hidden');
+  document.querySelectorAll('.master-page').forEach(function(p) { p.classList.add('hidden'); });
+
+  if (page === 'restaurant') {
+    document.getElementById('masterPageRestaurant').classList.remove('hidden');
+    loadRestaurantsForMaster();
+  } else if (page === 'menu') {
+    document.getElementById('masterPageMenu').classList.remove('hidden');
+    loadRestaurantSelectForMenu();
+  } else if (page === 'stats') {
+    document.getElementById('masterPageStats').classList.remove('hidden');
+    setDefaultDates();
+    loadRestaurantButtonsForStats();
+    loadDeptSelectForStats();
+  } else if (page === 'members') {
+    document.getElementById('masterPageMembers').classList.remove('hidden');
+    memberIdChecked = false;
+    loadMembers();
+    loadRestaurantSelectForMember();
+    loadDeptSelect('newMemberDept');
+  } else if (page === 'departments') {
+    document.getElementById('masterPageDepartments').classList.remove('hidden');
+    loadDepartmentsForMaster();
+  }
+  window.scrollTo(0, 0);
+}
+
+// ============================================
+// 새로고침
+// ============================================
+function refreshNow() { loadTodayOrders(); }
+
+// ============================================
+// 인증
+// ============================================
+function handleLogin() {
+  var userId = document.getElementById('loginUserId').value.trim();
+  var password = document.getElementById('loginPassword').value;
+  var rememberMe = document.getElementById('rememberMe').checked;
+  if (!userId || !password) { showAlert('loginAlert', '아이디와 비밀번호를 입력하세요', 'error'); return; }
+  showLoading('loginAlert');
+
+  gasCall({ action: 'login', userId: userId, password: password })
+    .then(function(result) {
+      if (result.success) {
+        currentUser = result.user;
+        saveCredentials(userId, password, rememberMe);
+        if (currentUser.role === 'master') showMasterScreen();
+        else if (currentUser.role === 'admin') showAdminScreen();
+        else showUserScreen();
+      } else {
+        showAlert('loginAlert', result.message, 'error');
+      }
+    })
+    .catch(function() { showAlert('loginAlert', '로그인 중 오류가 발생했습니다.', 'error'); });
+}
+
+function handleLogout() {
+  currentUser = null; adminRestaurantId = null;
+  Cache.clear(); showLoginScreen();
+}
+
+function checkDuplicateUserId() {
+  var userId = document.getElementById('registerUserId').value.trim();
+  if (!userId) { showAlert('registerAlert', '아이디를 입력하세요', 'error'); return; }
+
+  gasCall({ action: 'checkUserId', userId: userId })
+    .then(function(result) {
+      showAlert('registerAlert', result.message, result.available ? 'success' : 'error');
+      userIdChecked = result.available;
+    })
+    .catch(function() { showAlert('registerAlert', '중복 확인 중 오류가 발생했습니다', 'error'); });
+}
+
+function handleRegister() {
+  var userId     = document.getElementById('registerUserId').value.trim();
+  var password   = document.getElementById('registerPassword').value;
+  var name       = document.getElementById('registerName').value.trim();
+  var department = document.getElementById('registerDepartment').value.trim();
+  var email      = document.getElementById('registerEmail').value.trim();
+
+  if (!userId || !password || !name || !department) {
+    showAlert('registerAlert', '아이디, 비밀번호, 이름, 부서는 필수 입력 항목입니다', 'error'); return;
+  }
+  if (!userIdChecked) { showAlert('registerAlert', '아이디 중복 확인을 해주세요', 'error'); return; }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showAlert('registerAlert', '이메일 형식이 올바르지 않습니다', 'error'); return;
+  }
+
+  showLoading('registerAlert');
+  gasPost({ action: 'registerUser', userId: userId, password: password, name: name, department: department, email: email })
+    .then(function(result) {
+      if (result.success) {
+        showAlert('registerAlert', result.message, 'success');
+        setTimeout(function() { showLoginScreen(); }, 2000);
+      } else {
+        showAlert('registerAlert', result.message, 'error');
+      }
+    })
+    .catch(function() { showAlert('registerAlert', '회원가입 중 오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 비밀번호 변경
+// ============================================
+function handleChangePassword() {
+  var currentPw = document.getElementById('userCurrentPw').value;
+  var newPw     = document.getElementById('userNewPw').value;
+  var confirmPw = document.getElementById('userNewPwConfirm').value;
+
+  if (!currentPw || !newPw || !confirmPw) {
+    showAlert('userChangePwAlert', '모든 항목을 입력하세요', 'error'); return;
+  }
+  if (newPw !== confirmPw) {
+    showAlert('userChangePwAlert', '새 비밀번호가 일치하지 않습니다', 'error'); return;
+  }
+  if (newPw.length < 4) {
+    showAlert('userChangePwAlert', '새 비밀번호는 4자 이상이어야 합니다', 'error'); return;
+  }
+
+  showLoading('userChangePwAlert');
+  gasPost({ action: 'changePassword', userId: currentUser.userId, currentPw: currentPw, newPw: newPw })
+    .then(function(result) {
+      if (result.success) {
+        showAlert('userChangePwAlert', result.message, 'success');
+        document.getElementById('userCurrentPw').value = '';
+        document.getElementById('userNewPw').value = '';
+        document.getElementById('userNewPwConfirm').value = '';
+        document.getElementById('pwStrengthWrap2').style.display = 'none';
+      } else {
+        showAlert('userChangePwAlert', result.message, 'error');
+      }
+    })
+    .catch(function() { showAlert('userChangePwAlert', '비밀번호 변경 중 오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 일반 사용자 - 식당/메뉴/주문
+// ============================================
+function fillRestaurantSelect(selectId, restaurants) {
+  var select = document.getElementById(selectId);
+  select.innerHTML = '<option value="">식당을 선택하세요</option>';
+  restaurants.forEach(function(r) {
+    var opt = document.createElement('option');
+    opt.value = r.id; opt.textContent = r.name; opt.dataset.name = r.name;
+    select.appendChild(opt);
+  });
+}
+
+function loadRestaurantsForUser() {
+  if (Cache.restaurants) { fillRestaurantSelect('userRestaurantSelect', Cache.restaurants); return; }
+  gasCall({ action: 'getRestaurants' })
+    .then(function(d) { Cache.restaurants = d; fillRestaurantSelect('userRestaurantSelect', d); })
+    .catch(function() { showAlert('userAlert', '식당 목록을 불러오지 못했습니다', 'error'); });
+}
+
+function fillMenuSelect(selectId, menus) {
+  var s = document.getElementById(selectId);
+  s.innerHTML = '<option value="">메뉴를 선택하세요</option>';
+  menus.forEach(function(menu) {
+    var opt = document.createElement('option');
+    opt.value = menu.id;
+    opt.textContent = menu.name + (menu.price > 0 ? '  ' + menu.price.toLocaleString() + '원' : '');
+    opt.dataset.price = menu.price;
+    opt.dataset.menuName = menu.name;
+    s.appendChild(opt);
+  });
+}
+
+function loadMenusForUser() {
+  var rId = document.getElementById('userRestaurantSelect').value;
+  document.getElementById('userMenuSelect').innerHTML = '<option value="">메뉴를 선택하세요</option>';
+  resetPriceDisplay();
+  if (!rId) return;
+  if (Cache.menus[rId]) { fillMenuSelect('userMenuSelect', Cache.menus[rId]); return; }
+  gasCall({ action: 'getMenus', restaurantId: rId })
+    .then(function(menus) { Cache.menus[rId] = menus; fillMenuSelect('userMenuSelect', menus); })
+    .catch(function() { showAlert('userAlert', '메뉴를 불러오지 못했습니다', 'error'); });
+}
+
+function onMenuSelected() {
+  var s = document.getElementById('userMenuSelect');
+  updatePriceDisplay(s.options[s.selectedIndex] ? Number(s.options[s.selectedIndex].dataset.price) || 0 : 0);
+}
+
+function updatePriceDisplay(price) {
+  var d = document.getElementById('userPriceDisplay');
+  document.getElementById('userPrice').value = price;
+  if (price > 0) { d.textContent = price.toLocaleString() + '원'; d.className = 'price-display has-value'; }
+  else { d.textContent = '메뉴를 선택하면 금액이 표시됩니다'; d.className = 'price-display'; }
+}
+function resetPriceDisplay() { updatePriceDisplay(0); }
+
+function handleUserOrder() {
+  var rSelect = document.getElementById('userRestaurantSelect');
+  var mSelect = document.getElementById('userMenuSelect');
+  var price = Number(document.getElementById('userPrice').value);
+  var rId = rSelect.value;
+  var rName = rSelect.options[rSelect.selectedIndex].dataset.name;
+  var mOpt = mSelect.options[mSelect.selectedIndex];
+  var menuName = mOpt ? (mOpt.dataset.menuName || mOpt.text) : '';
+  if (!rId || !mSelect.value) { showAlert('userAlert', '식당과 메뉴를 선택하세요', 'error'); return; }
+  if (price <= 0) { showAlert('userAlert', '메뉴 금액이 등록되어 있지 않습니다. 관리자에게 문의하세요', 'error'); return; }
+  showLoading('userAlert');
+
+  gasPost({
+    action: 'addOrder',
+    userId: currentUser.userId,
+    userName: currentUser.name,
+    department: currentUser.department,
+    restaurantId: rId,
+    restaurantName: rName,
+    menuName: menuName,
+    price: price
+  })
+    .then(function(result) {
+      if (result.success) showAlert('userAlert', '주문이 등록되었습니다', 'success');
+      else showAlert('userAlert', '주문 등록 중 오류가 발생했습니다', 'error');
+    })
+    .catch(function() { showAlert('userAlert', '주문 등록 중 오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 어드민 - 주문 조회
+// ============================================
+function loadTodayOrders() {
+  if (!adminRestaurantId) {
+    document.getElementById('todayOrdersContent').innerHTML = errorHtml('배정된 식당이 없습니다.');
+    return;
+  }
+  document.getElementById('todayOrdersContent').innerHTML = loadingHtml();
+  gasCall({ action: 'getTodayOrders', restaurantId: adminRestaurantId })
+    .then(function(result) {
+      displayOrders('todayOrdersContent', result.orders, result.totalAmount, '당일');
+    })
+    .catch(function() {
+      document.getElementById('todayOrdersContent').innerHTML = errorHtml('주문 현황을 불러오지 못했습니다');
+    });
+}
+
+function loadPeriodOrders() {
+  if (!adminRestaurantId) { showAlert('adminAlert', '배정된 식당이 없습니다', 'error'); return; }
+  var startDate = document.getElementById('adminStartDate').value;
+  var endDate   = document.getElementById('adminEndDate').value;
+  if (!startDate || !endDate) { showAlert('adminAlert', '조회 기간을 선택하세요', 'error'); return; }
+  document.getElementById('periodOrdersContent').innerHTML = loadingHtml();
+
+  gasCall({ action: 'getOrdersByPeriod', restaurantId: adminRestaurantId, startDate: startDate, endDate: endDate })
+    .then(function(result) {
+      displayOrders('periodOrdersContent', result.orders, result.totalAmount, '기간');
+    })
+    .catch(function() {
+      document.getElementById('periodOrdersContent').innerHTML = errorHtml('주문 내역을 불러오지 못했습니다');
+    });
+}
+
+function displayOrders(containerId, orders, totalAmount, label) {
+  var container = document.getElementById(containerId);
+  if (!orders || orders.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>' + label + ' 주문 내역이 없습니다</p></div>';
+    return;
+  }
+
+  var menuMap = {};
+  orders.forEach(function(o) {
+    if (!menuMap[o.menuName]) menuMap[o.menuName] = { count: 0, total: 0 };
+    menuMap[o.menuName].count++;
+    menuMap[o.menuName].total += Number(o.price);
+  });
+
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-name"><col class="col-dept"><col class="col-menu"><col class="col-price"><col class="col-date"></colgroup>';
+  html += '<thead><tr><th>이름</th><th>부서</th><th>메뉴</th><th>금액</th><th>주문일시</th></tr></thead><tbody>';
+  orders.forEach(function(o) {
+    var dt = new Date(o.orderDate);
+    var dateStr = (dt.getMonth()+1) + '/' + dt.getDate() + ' ' +
+                  String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0');
+    html += '<tr><td>' + o.userName + '</td><td>' + o.department + '</td><td>' + o.menuName + '</td>';
+    html += '<td>' + Number(o.price).toLocaleString() + '원</td><td>' + dateStr + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  html += '<div class="summary-box"><h4>📋 메뉴별 집계</h4>';
+  Object.keys(menuMap).forEach(function(menuName) {
+    var info = menuMap[menuName];
+    html += '<div class="summary-row"><span>' + menuName + '<span class="summary-count">×' + info.count + '</span></span>';
+    html += '<span>' + info.total.toLocaleString() + '원</span></div>';
+  });
+  html += '<div class="summary-row total"><span>합계 <span class="summary-count">(' + orders.length + '건)</span></span>';
+  html += '<span>' + totalAmount.toLocaleString() + '원</span></div></div>';
+
+  container.innerHTML = html;
+}
+
+// ============================================
+// 마스터 - 식당 관리
+// ============================================
+function renderRestaurantTable(restaurants) {
+  var c = document.getElementById('restaurantsContent');
+  if (!restaurants || restaurants.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏪</div><p>등록된 식당이 없습니다</p></div>'; return;
+  }
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-rname"><col class="col-act"></colgroup>';
+  html += '<thead><tr><th>식당 이름</th><th>삭제</th></tr></thead><tbody>';
+  restaurants.forEach(function(r) {
+    html += '<tr><td><strong>' + r.name + '</strong></td>';
+    html += '<td><button class="btn btn-danger btn-small" onclick="deleteRestaurant(\'' + r.id + '\')">삭제</button></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  c.innerHTML = html;
+}
+
+function loadRestaurantsForMaster() {
+  if (Cache.restaurants) { renderRestaurantTable(Cache.restaurants); return; }
+  document.getElementById('restaurantsContent').innerHTML = loadingHtml();
+  gasCall({ action: 'getRestaurants' })
+    .then(function(d) { Cache.restaurants = d; renderRestaurantTable(d); })
+    .catch(function() { document.getElementById('restaurantsContent').innerHTML = errorHtml('식당 목록을 불러오지 못했습니다'); });
+}
+
+function handleAddRestaurant() {
+  var name = document.getElementById('newRestaurantName').value.trim();
+  if (!name) { showAlert('restaurantAlert', '식당 이름을 입력하세요', 'error'); return; }
+  gasPost({ action: 'addRestaurant', name: name })
+    .then(function(r) {
+      if (r.success) {
+        Cache.clearRestaurants();
+        showAlert('restaurantAlert', '식당이 추가되었습니다', 'success');
+        document.getElementById('newRestaurantName').value = '';
+        loadRestaurantsForMaster();
+      } else showAlert('restaurantAlert', '식당 추가 중 오류가 발생했습니다', 'error');
+    })
+    .catch(function() { showAlert('restaurantAlert', '오류가 발생했습니다', 'error'); });
+}
+
+function deleteRestaurant(rId) {
+  if (!confirm('이 식당을 삭제하시겠습니까?')) return;
+  gasPost({ action: 'deleteRestaurant', restaurantId: rId })
+    .then(function(r) {
+      if (r.success) { Cache.clearRestaurants(); showAlert('restaurantAlert', '식당이 삭제되었습니다', 'success'); loadRestaurantsForMaster(); }
+      else showAlert('restaurantAlert', r.message, 'error');
+    })
+    .catch(function() { showAlert('restaurantAlert', '오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 마스터 - 메뉴 관리
+// ============================================
+function loadRestaurantSelectForMenu() {
+  if (Cache.restaurants) { fillRestaurantSelect('menuRestaurantSelect', Cache.restaurants); return; }
+  gasCall({ action: 'getRestaurants' })
+    .then(function(d) { Cache.restaurants = d; fillRestaurantSelect('menuRestaurantSelect', d); });
+}
+
+function renderMenuTable(menus) {
+  var c = document.getElementById('menusContent');
+  if (!menus || menus.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>등록된 메뉴가 없습니다</p></div>'; return;
+  }
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-mname"><col class="col-mprice"><col class="col-mact"></colgroup>';
+  html += '<thead><tr><th>메뉴 이름</th><th>금액</th><th>액션</th></tr></thead><tbody>';
+  menus.forEach(function(menu) {
+    html += '<tr id="menu-row-' + menu.id + '">';
+    html += '<td>' + menu.name + '</td>';
+    html += '<td style="font-weight:600;color:#667eea;">' + (menu.price > 0 ? menu.price.toLocaleString() + '원' : '-') + '</td>';
+    html += '<td>';
+    html += '<button class="btn btn-warning btn-small" style="margin-right:4px;margin-bottom:4px;" onclick="showMenuEditRow(\'' + menu.id + '\',\'' + escStr(menu.name) + '\',' + menu.price + ')">수정</button>';
+    html += '<button class="btn btn-danger btn-small" onclick="deleteMenu(\'' + menu.id + '\')">삭제</button>';
+    html += '</td></tr>';
+    html += '<tr id="menu-edit-' + menu.id + '" class="hidden"><td colspan="3">';
+    html += '<div class="menu-edit-row">';
+    html += '<div class="form-group" style="margin-bottom:8px;"><label>메뉴 이름</label>';
+    html += '<input type="text" id="edit-name-' + menu.id + '" value="' + escStr(menu.name) + '"></div>';
+    html += '<div class="form-group" style="margin-bottom:8px;"><label>금액 (원)</label>';
+    html += '<input type="number" id="edit-price-' + menu.id + '" value="' + menu.price + '" min="0" inputmode="numeric"></div>';
+    html += '<div class="menu-edit-actions">';
+    html += '<button class="btn btn-primary btn-small" onclick="handleUpdateMenu(\'' + menu.id + '\')">저장</button>';
+    html += '<button class="btn btn-secondary btn-small" onclick="hideMenuEditRow(\'' + menu.id + '\')">취소</button>';
+    html += '</div></div></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  c.innerHTML = html;
+}
+
+function escStr(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+function showMenuEditRow(menuId) {
+  document.querySelectorAll('[id^="menu-edit-"]').forEach(function(el) { el.classList.add('hidden'); });
+  document.getElementById('menu-edit-' + menuId).classList.remove('hidden');
+  document.getElementById('edit-name-' + menuId).focus();
+}
+
+function hideMenuEditRow(menuId) {
+  document.getElementById('menu-edit-' + menuId).classList.add('hidden');
+}
+
+function handleUpdateMenu(menuId) {
+  var newName  = document.getElementById('edit-name-' + menuId).value.trim();
+  var newPrice = Number(document.getElementById('edit-price-' + menuId).value);
+  if (!newName) { showAlert('menuAlert', '메뉴 이름을 입력하세요', 'error'); return; }
+  if (newPrice <= 0) { showAlert('menuAlert', '금액을 입력하세요', 'error'); return; }
+  gasPost({ action: 'updateMenu', menuId: menuId, name: newName, price: newPrice })
+    .then(function(r) {
+      if (r.success) {
+        Cache.clearMenus(document.getElementById('menuRestaurantSelect').value);
+        showAlert('menuAlert', '메뉴가 수정되었습니다', 'success');
+        loadMenusForMaster();
+      } else showAlert('menuAlert', r.message || '수정 중 오류', 'error');
+    })
+    .catch(function() { showAlert('menuAlert', '수정 중 오류가 발생했습니다', 'error'); });
+}
+
+function loadMenusForMaster() {
+  var rId = document.getElementById('menuRestaurantSelect').value;
+  if (!rId) {
+    document.getElementById('menusContent').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🍔</div><p>식당을 선택하면 메뉴 목록이 표시됩니다</p></div>'; return;
+  }
+  if (Cache.menus[rId]) { renderMenuTable(Cache.menus[rId]); return; }
+  document.getElementById('menusContent').innerHTML = loadingHtml();
+  gasCall({ action: 'getMenus', restaurantId: rId })
+    .then(function(menus) { Cache.menus[rId] = menus; renderMenuTable(menus); })
+    .catch(function() { document.getElementById('menusContent').innerHTML = errorHtml('메뉴를 불러오지 못했습니다'); });
+}
+
+function handleAddMenu() {
+  var rId       = document.getElementById('menuRestaurantSelect').value;
+  var menuName  = document.getElementById('newMenuName').value.trim();
+  var menuPrice = Number(document.getElementById('newMenuPrice').value) || 0;
+  if (!rId)      { showAlert('menuAlert', '식당을 선택하세요', 'error'); return; }
+  if (!menuName) { showAlert('menuAlert', '메뉴 이름을 입력하세요', 'error'); return; }
+  if (menuPrice <= 0) { showAlert('menuAlert', '금액을 입력하세요', 'error'); return; }
+  gasPost({ action: 'addMenu', restaurantId: rId, name: menuName, price: menuPrice })
+    .then(function(r) {
+      if (r.success) {
+        Cache.clearMenus(rId);
+        showAlert('menuAlert', '메뉴가 추가되었습니다', 'success');
+        document.getElementById('newMenuName').value = '';
+        document.getElementById('newMenuPrice').value = '';
+        loadMenusForMaster();
+      } else showAlert('menuAlert', '메뉴 추가 중 오류가 발생했습니다', 'error');
+    })
+    .catch(function() { showAlert('menuAlert', '오류가 발생했습니다', 'error'); });
+}
+
+function deleteMenu(menuId) {
+  if (!confirm('이 메뉴를 삭제하시겠습니까?')) return;
+  gasPost({ action: 'deleteMenu', menuId: menuId })
+    .then(function(r) {
+      if (r.success) { Cache.clearMenus(); showAlert('menuAlert', '메뉴가 삭제되었습니다', 'success'); loadMenusForMaster(); }
+      else showAlert('menuAlert', r.message, 'error');
+    })
+    .catch(function() { showAlert('menuAlert', '오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 마스터 - 통계
+// ============================================
+function loadDeptSelectForStats() {
+  var sel = document.getElementById('statsDeptFilter');
+  if (!sel) return;
+  if (Cache.departments) { fillDeptSelectForStats(Cache.departments); return; }
+  gasCall({ action: 'getDepartments' })
+    .then(function(depts) { Cache.departments = depts; fillDeptSelectForStats(depts); })
+    .catch(function() {});
+}
+
+function fillDeptSelectForStats(depts) {
+  var sel = document.getElementById('statsDeptFilter');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">전체 부서</option>';
+  depts.forEach(function(d) {
+    var opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+}
+
+function loadRestaurantButtonsForStats() {
+  if (Cache.restaurants) { renderRestaurantButtons(Cache.restaurants); return; }
+  document.getElementById('restaurantButtonsContainer').innerHTML = loadingHtml();
+  gasCall({ action: 'getRestaurants' })
+    .then(function(d) { Cache.restaurants = d; renderRestaurantButtons(d); });
+}
+
+function renderRestaurantButtons(restaurants) {
+  var c = document.getElementById('restaurantButtonsContainer');
+  if (!restaurants || restaurants.length === 0) { c.innerHTML = '<div class="empty-state"><p>등록된 식당이 없습니다</p></div>'; return; }
+  var html = '<div class="restaurant-buttons"><button class="btn btn-all active" onclick="selectRestaurantForStats(\'all\', this)">🏪 전체 조회</button>';
+  restaurants.forEach(function(r) {
+    html += '<button class="btn btn-secondary" onclick="selectRestaurantForStats(\'' + r.id + '\', this)">' + r.name + '</button>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
+  selectedRestaurantId = 'all';
+}
+
+function selectRestaurantForStats(rId, btn) {
+  document.querySelectorAll('.restaurant-buttons .btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  selectedRestaurantId = rId;
+}
+
+function loadRestaurantStats() {
+  var startDate = document.getElementById('masterStartDate').value;
+  var endDate   = document.getElementById('masterEndDate').value;
+  if (!startDate || !endDate) { showAlert('statsAlert', '조회 기간을 선택하세요', 'error'); return; }
+  document.getElementById('statsContent').innerHTML = loadingHtml();
+
+  if (selectedRestaurantId === 'all') {
+    gasCall({ action: 'getAllRestaurantOrders', startDate: startDate, endDate: endDate })
+      .then(displayAllRestaurantStats)
+      .catch(function() { document.getElementById('statsContent').innerHTML = errorHtml('통계를 불러오지 못했습니다'); });
+  } else {
+    gasCall({ action: 'getOrdersByPeriod', restaurantId: selectedRestaurantId, startDate: startDate, endDate: endDate })
+      .then(displaySingleRestaurantStats)
+      .catch(function() { document.getElementById('statsContent').innerHTML = errorHtml('통계를 불러오지 못했습니다'); });
+  }
+}
+
+function buildOrderTable(orders) {
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-name"><col class="col-dept"><col class="col-menu"><col class="col-price"><col class="col-date"></colgroup>';
+  html += '<thead><tr><th>이름</th><th>부서</th><th>메뉴</th><th>금액</th><th>주문일시</th></tr></thead><tbody>';
+  orders.forEach(function(o) {
+    var dt = new Date(o.orderDate);
+    var dateStr = (dt.getMonth()+1) + '/' + dt.getDate() + ' ' +
+                  String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0');
+    html += '<tr><td>' + o.userName + '</td><td>' + o.department + '</td><td>' + o.menuName + '</td>';
+    html += '<td>' + Number(o.price).toLocaleString() + '원</td><td>' + dateStr + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function buildDeptSummaryBox(orders, totalAmount, deptFilter) {
+  var menuMap = {};
+  orders.forEach(function(o) {
+    if (!menuMap[o.menuName]) menuMap[o.menuName] = { count: 0, total: 0 };
+    menuMap[o.menuName].count++;
+    menuMap[o.menuName].total += Number(o.price);
+  });
+  var html = '<div class="summary-box"><h4>📋 메뉴별 집계' + (deptFilter ? ' · ' + deptFilter : '') + '</h4>';
+  Object.keys(menuMap).forEach(function(menuName) {
+    var info = menuMap[menuName];
+    html += '<div class="summary-row"><span>' + menuName + '<span class="summary-count"> ×' + info.count + '</span></span><span>' + info.total.toLocaleString() + '원</span></div>';
+  });
+  html += '<div class="summary-row total"><span>합계 <span class="summary-count">(' + orders.length + '건)</span></span><span>' + totalAmount.toLocaleString() + '원</span></div>';
+  html += '</div>';
+
+  if (!deptFilter) {
+    var deptMap = {};
+    orders.forEach(function(o) {
+      if (!deptMap[o.department]) deptMap[o.department] = { count: 0, total: 0 };
+      deptMap[o.department].count++;
+      deptMap[o.department].total += Number(o.price);
+    });
+    var depts = Object.keys(deptMap);
+    if (depts.length > 1) {
+      html += '<div class="summary-box" style="background:#f0f9ff;border-color:#bae6fd;margin-top:8px;"><h4>🏢 부서별 집계</h4>';
+      depts.sort().forEach(function(dept) {
+        var info = deptMap[dept];
+        html += '<div class="summary-row"><span>' + dept + '<span class="summary-count"> ×' + info.count + '</span></span><span>' + info.total.toLocaleString() + '원</span></div>';
+      });
+      html += '</div>';
+    }
+  }
+  return html;
+}
+
+function displayAllRestaurantStats(stats) {
+  var c = document.getElementById('statsContent');
+  var deptFilter = document.getElementById('statsDeptFilter').value;
+
+  if (!stats || stats.length === 0) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><p>해당 기간에 주문 내역이 없습니다</p></div>'; return; }
+
+  var filtered = stats.map(function(stat) {
+    var filteredOrders = deptFilter ? stat.orders.filter(function(o) { return o.department === deptFilter; }) : stat.orders;
+    var filteredTotal  = filteredOrders.reduce(function(sum, o) { return sum + Number(o.price); }, 0);
+    return { restaurantName: stat.restaurantName, orders: filteredOrders, totalAmount: filteredTotal };
+  }).filter(function(stat) { return stat.orders.length > 0; });
+
+  if (filtered.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>' + (deptFilter ? '[' + deptFilter + '] 부서의 ' : '') + '주문 내역이 없습니다</p></div>';
+    return;
+  }
+
+  var filterLabel = deptFilter ? ' · <span style="color:#667eea;font-size:14px;">🏢 ' + deptFilter + '</span>' : '';
+  var html = '';
+  var grand = 0;
+
+  filtered.forEach(function(stat) {
+    grand += stat.totalAmount;
+    html += '<div class="card" style="background:#f9fafb;">';
+    html += '<h3>' + stat.restaurantName + filterLabel + '</h3>';
+    html += buildOrderTable(stat.orders);
+    html += buildDeptSummaryBox(stat.orders, stat.totalAmount, deptFilter);
+    html += '</div>';
+  });
+
+  var allOrders = [];
+  filtered.forEach(function(s) { allOrders = allOrders.concat(s.orders); });
+  html += '<div class="card"><div class="summary-box" style="background:#dcfce7;border-color:#86efac;">';
+  html += '<h4>🏪 전체 합계' + (deptFilter ? ' (' + deptFilter + ')' : '') + '</h4>';
+  filtered.forEach(function(s) {
+    html += '<div class="summary-row"><span>' + s.restaurantName + '<span class="summary-count"> (' + s.orders.length + '건)</span></span><span>' + s.totalAmount.toLocaleString() + '원</span></div>';
+  });
+  html += '<div class="summary-row total"><span>총합계 <span class="summary-count">(' + allOrders.length + '건)</span></span><span>' + grand.toLocaleString() + '원</span></div>';
+  html += '</div></div>';
+  c.innerHTML = html;
+}
+
+function displaySingleRestaurantStats(result) {
+  var c = document.getElementById('statsContent');
+  var deptFilter = document.getElementById('statsDeptFilter').value;
+
+  if (!result || !result.orders || result.orders.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>해당 기간에 주문 내역이 없습니다</p></div>'; return;
+  }
+
+  var orders = deptFilter ? result.orders.filter(function(o) { return o.department === deptFilter; }) : result.orders;
+  var totalAmount = orders.reduce(function(sum, o) { return sum + Number(o.price); }, 0);
+
+  if (orders.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>[' + deptFilter + '] 부서의 주문 내역이 없습니다</p></div>'; return;
+  }
+
+  var html = '<div class="card">';
+  if (deptFilter) html += '<div style="margin-bottom:10px;font-size:14px;color:#667eea;font-weight:600;">🏢 ' + deptFilter + ' 부서 필터 적용 중</div>';
+  html += buildOrderTable(orders);
+  html += buildDeptSummaryBox(orders, totalAmount, deptFilter);
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+// ============================================
+// 마스터 - 회원 관리
+// ============================================
+function toggleRestaurantSelect() {
+  var role = document.getElementById('newMemberRole').value;
+  var grp  = document.getElementById('memberRestaurantGroup');
+  if (role === 'admin') grp.classList.remove('hidden');
+  else grp.classList.add('hidden');
+}
+
+function loadRestaurantSelectForMember() {
+  if (Cache.restaurants) { fillRestaurantSelect('newMemberRestaurant', Cache.restaurants); return; }
+  gasCall({ action: 'getRestaurants' })
+    .then(function(d) { Cache.restaurants = d; fillRestaurantSelect('newMemberRestaurant', d); });
+}
+
+function checkMemberUserId() {
+  var userId = document.getElementById('newMemberUserId').value.trim();
+  if (!userId) { showAlert('membersAlert', '아이디를 입력하세요', 'error'); return; }
+  gasCall({ action: 'checkUserId', userId: userId })
+    .then(function(r) {
+      showAlert('membersAlert', r.message, r.available ? 'success' : 'error');
+      memberIdChecked = r.available;
+    });
+}
+
+function handleAddMember() {
+  var userId     = document.getElementById('newMemberUserId').value.trim();
+  var password   = document.getElementById('newMemberPassword').value;
+  var name       = document.getElementById('newMemberName').value.trim();
+  var dept       = document.getElementById('newMemberDept').value;
+  var email      = document.getElementById('newMemberEmail').value.trim();
+  var role       = document.getElementById('newMemberRole').value;
+  var restaurantId = document.getElementById('newMemberRestaurant').value;
+
+  if (!userId || !password || !name || !dept) {
+    showAlert('membersAlert', '아이디, 비밀번호, 이름, 부서는 필수 입력 항목입니다', 'error'); return;
+  }
+  if (!memberIdChecked) { showAlert('membersAlert', '아이디 중복 확인을 해주세요', 'error'); return; }
+  if (role === 'admin' && !restaurantId) { showAlert('membersAlert', '식당 관리자는 배정 식당을 선택해야 합니다', 'error'); return; }
+
+  showLoading('membersAlert');
+  gasPost({ action: 'addMemberByMaster', userId: userId, password: password, name: name, department: dept, email: email, role: role, restaurantId: restaurantId })
+    .then(function(r) {
+      if (r.success) {
+        Cache.clearMembers();
+        showAlert('membersAlert', '회원이 추가되었습니다', 'success');
+        ['newMemberUserId','newMemberPassword','newMemberName','newMemberEmail'].forEach(function(id) { document.getElementById(id).value = ''; });
+        document.getElementById('newMemberRole').value = 'user';
+        document.getElementById('memberRestaurantGroup').classList.add('hidden');
+        memberIdChecked = false;
+        loadMembers();
+      } else showAlert('membersAlert', r.message, 'error');
+    })
+    .catch(function() { showAlert('membersAlert', '회원 추가 중 오류가 발생했습니다', 'error'); });
+}
+
+function renderMembersTable(members) {
+  var c = document.getElementById('membersContent');
+  if (!members || members.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>등록된 회원이 없습니다</p></div>'; return;
+  }
+  var roleLabel = { master: '마스터', admin: '관리자', user: '일반' };
+  var roleBadge = { master: 'badge-master', admin: 'badge-admin', user: 'badge-user' };
+  var rMap = {};
+  if (Cache.restaurants) Cache.restaurants.forEach(function(r) { rMap[r.id] = r.name; });
+
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-uid"><col class="col-uname"><col class="col-udept"><col class="col-urole"><col class="col-urst"><col class="col-udel"></colgroup>';
+  html += '<thead><tr><th>아이디</th><th>이름</th><th>부서</th><th>역할</th><th>식당</th><th>삭제</th></tr></thead><tbody>';
+  members.forEach(function(m) {
+    var rName = m.restaurantId ? (rMap[m.restaurantId] || m.restaurantId) : '-';
+    html += '<tr><td>' + m.userId + '</td><td>' + m.name + '</td><td>' + m.department + '</td>';
+    html += '<td><span class="member-role-badge ' + (roleBadge[m.role] || 'badge-user') + '">' + (roleLabel[m.role] || m.role) + '</span></td>';
+    html += '<td style="font-size:11px;color:#6b7280;">' + rName + '</td>';
+    html += '<td>' + (m.role === 'master' ? '-' : '<button class="btn btn-danger btn-small" onclick="deleteMember(\'' + m.userId + '\',\'' + escStr(m.name) + '\')">삭제</button>') + '</td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<p style="margin-top:10px;font-size:13px;color:#6b7280;text-align:right;">총 ' + members.length + '명</p>';
+  c.innerHTML = html;
+}
+
+function loadMembers() {
+  if (Cache.members) { renderMembersTable(Cache.members); return; }
+  document.getElementById('membersContent').innerHTML = loadingHtml();
+  gasCall({ action: 'getMembers' })
+    .then(function(d) { Cache.members = d; renderMembersTable(d); })
+    .catch(function() { document.getElementById('membersContent').innerHTML = errorHtml('회원 목록을 불러오지 못했습니다'); });
+}
+
+function deleteMember(userId, name) {
+  if (!confirm(name + '님을 삭제하시겠습니까?')) return;
+  gasPost({ action: 'deleteMember', userId: userId })
+    .then(function(r) {
+      if (r.success) { Cache.clearMembers(); showAlert('membersAlert', '회원이 삭제되었습니다', 'success'); loadMembers(); }
+      else showAlert('membersAlert', r.message, 'error');
+    })
+    .catch(function() { showAlert('membersAlert', '삭제 중 오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 부서 관리
+// ============================================
+function loadDeptSelect(selectId) {
+  var sel = document.getElementById(selectId);
+  if (!sel) return;
+  if (Cache.departments) { fillDeptSelect(selectId, Cache.departments); return; }
+  sel.innerHTML = '<option value="">로딩 중...</option>';
+  gasCall({ action: 'getDepartments' })
+    .then(function(depts) { Cache.departments = depts; fillDeptSelect(selectId, depts); })
+    .catch(function() { sel.innerHTML = '<option value="">불러오기 실패</option>'; });
+}
+
+function fillDeptSelect(selectId, depts) {
+  var sel = document.getElementById(selectId);
+  if (!sel) return;
+  sel.innerHTML = '<option value="">부서를 선택하세요</option>';
+  depts.forEach(function(d) {
+    var opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+}
+
+function loadDepartmentsForMaster() {
+  if (Cache.departments) { renderDeptTable(Cache.departments); return; }
+  document.getElementById('deptsContent').innerHTML = loadingHtml();
+  gasCall({ action: 'getDepartments' })
+    .then(function(depts) {
+      Cache.departments = depts;
+      renderDeptTable(depts);
+      fillDeptSelect('newMemberDept', depts);
+      fillDeptSelect('registerDepartment', depts);
+    })
+    .catch(function() { document.getElementById('deptsContent').innerHTML = errorHtml('부서 목록을 불러오지 못했습니다'); });
+}
+
+function renderDeptTable(depts) {
+  var c = document.getElementById('deptsContent');
+  if (!depts || depts.length === 0) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏢</div><p>등록된 부서가 없습니다</p></div>'; return;
+  }
+  var html = '<div class="table-wrap"><table>';
+  html += '<colgroup><col class="col-dname"><col class="col-ddel"></colgroup>';
+  html += '<thead><tr><th>부서 이름</th><th>삭제</th></tr></thead><tbody>';
+  depts.forEach(function(d) {
+    html += '<tr><td>' + d + '</td>';
+    html += '<td><button class="btn btn-danger btn-small" onclick="handleDeleteDepartment(\'' + d.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')">삭제</button></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  c.innerHTML = html;
+}
+
+function handleAddDepartment() {
+  var name = document.getElementById('newDeptName').value.trim();
+  if (!name) { showAlert('deptAlert', '부서 이름을 입력하세요', 'error'); return; }
+  gasPost({ action: 'addDepartment', name: name })
+    .then(function(r) {
+      if (r.success) {
+        document.getElementById('newDeptName').value = '';
+        refreshDeptCache(function() { showAlert('deptAlert', '부서가 추가되었습니다', 'success'); });
+      } else { showAlert('deptAlert', r.message, 'error'); }
+    })
+    .catch(function() { showAlert('deptAlert', '오류가 발생했습니다', 'error'); });
+}
+
+function handleDeleteDepartment(name) {
+  if (!confirm(name + ' 부서를 삭제하시겠습니까?')) return;
+  gasPost({ action: 'deleteDepartment', name: name })
+    .then(function(r) {
+      if (r.success) {
+        refreshDeptCache(function() { showAlert('deptAlert', '부서가 삭제되었습니다', 'success'); });
+      } else { showAlert('deptAlert', r.message, 'error'); }
+    })
+    .catch(function() { showAlert('deptAlert', '오류가 발생했습니다', 'error'); });
+}
+
+function refreshDeptCache(callback) {
+  gasCall({ action: 'getDepartments' })
+    .then(function(depts) {
+      Cache.departments = depts;
+      renderDeptTable(depts);
+      fillDeptSelect('newMemberDept', depts);
+      fillDeptSelect('registerDepartment', depts);
+      if (callback) callback();
+    })
+    .catch(function() { showAlert('deptAlert', '목록 갱신 중 오류가 발생했습니다', 'error'); });
+}
+
+// ============================================
+// 유틸리티
+// ============================================
+function showAlert(containerId, message, type) {
+  var c = document.getElementById(containerId);
+  if (!c) return;
+  var cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
+  c.innerHTML = '<div class="alert ' + cls + '">' + message + '</div>';
+  setTimeout(function() { if (c) c.innerHTML = ''; }, 5000);
+}
+
+function showLoading(containerId) {
+  var c = document.getElementById(containerId);
+  if (c) c.innerHTML = '<div class="alert alert-info"><div style="display:inline-block;width:16px;height:16px;border:2px solid #3b82f6;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:10px;vertical-align:middle;"></div>처리 중...</div>';
+}
+
+function loadingHtml() { return '<div class="loading"><div class="spinner"></div><p>로딩 중...</p></div>'; }
+function errorHtml(msg) { return '<div class="alert alert-error">' + msg + '</div>'; }
+</script>
+</body>
+</html>
