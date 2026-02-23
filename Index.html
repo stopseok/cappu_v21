@@ -700,24 +700,45 @@
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbyI3_73hfdWJHArYzlj3xdVJmv4URlkpOxTXaCwwS7pLNXUT3yBrHv_uiHskF6Z_hnM_Q/exec';
 
 // ============================================
-// GAS API 호출 헬퍼 (GET 방식)
+// GAS API 호출 헬퍼 (JSONP 방식 — CORS 우회)
 // ============================================
+var _jsonpCallbackIndex = 0;
+
 function gasCall(params) {
-  var url = GAS_URL + '?' + Object.keys(params).map(function(k) {
-    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] !== undefined ? params[k] : '');
-  }).join('&');
-  return fetch(url).then(function(r) { return r.json(); });
+  return new Promise(function(resolve, reject) {
+    var cbName = '_gasCallback_' + (++_jsonpCallbackIndex) + '_' + Date.now();
+    params.callback = cbName;
+
+    var url = GAS_URL + '?' + Object.keys(params).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] !== undefined ? params[k] : '');
+    }).join('&');
+
+    var script = document.createElement('script');
+    var timer = setTimeout(function() {
+      cleanup();
+      reject(new Error('timeout'));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[cbName] = function(data) {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = function() { cleanup(); reject(new Error('script error')); };
+    script.src = url;
+    document.head.appendChild(script);
+  });
 }
 
-// POST 방식 (데이터 변경 작업)
+// POST도 JSONP GET으로 처리 (GAS는 doGet에서 모두 처리)
 function gasPost(params) {
-  return fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: Object.keys(params).map(function(k) {
-      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] !== undefined ? params[k] : '');
-    }).join('&')
-  }).then(function(r) { return r.json(); });
+  return gasCall(params);
 }
 
 // ============================================
